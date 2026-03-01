@@ -1,0 +1,41 @@
+name: Test ARC Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: arc-scale-set 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print runner information
+        run: |
+          echo "Runner name: $RUNNER_NAME"
+          echo "Runner OS: $RUNNER_OS"
+          echo "Runner arch: $RUNNER_ARCH"
+          uname -a
+
+      - name: Test basic commands
+        run: |
+          pwd
+          ls -la
+          whoami
+
+      - name: Check Docker availability
+        run: |
+          if command -v docker &> /dev/null; then
+            echo "Docker is available"
+            docker --version
+          else
+            echo "Docker is not available"
+          fi
+
+      - name: Simple Python test
+        run: |
+          python3 --version
+          python3 -c "print('Hello from ARC runner!')"
+
+      - name: Job completed successfully
+        run: echo "✅ ARC runner is working correctly!"
