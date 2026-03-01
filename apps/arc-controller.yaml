@@ -8,7 +8,7 @@ spec:
   source: 
     repoURL: https://github.com/noh4nsen/ai-lab.git
     targetRevision: HEAD
-    path: apps/apps/arc/controller
+    path: cluster/bootstrap/arc/controller
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: arc-systems
