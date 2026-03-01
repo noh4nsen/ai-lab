@@ -1,7 +1,6 @@
-githubConfigUrl: "https://github.com/noh4nsen/ai-lab"
-
-githubConfigSecret: arc-github-secret
-
-controllerServiceAccount:
-  namespace: arc-systems
-  name: arc-controller-gha-rs-controller
+gha-runner-scale-set:
+  githubConfigUrl: "https://github.com/noh4nsen/ai-lab"
+  githubConfigSecret: arc-github-secret
+  controllerServiceAccount:
+    namespace: arc-systems
+    name: arc-controller-gha-rs-controller
