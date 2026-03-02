@@ -3,6 +3,11 @@ name: Docker | Build and Push
 on:
   workflow_dispatch:
 
+env:
+  APP_NAME: test-api
+  CONTEXT: ./src/test-api
+  DOCKERFILE: ./src/test-api/Dockerfile
+
 jobs:
   build-and-push:
     runs-on: arc-scale-set
@@ -18,3 +23,27 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Generate Image Refs
+        id: image-refs
+        run: |
+          IMAGE_TAG=$(date +%Y%m%d).${{ github.run_number }}
+          IMAGE_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}"
+          echo "image_repo=${IMAGE_REPO}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.CONTEXT }}
+          file: ${{ env.DOCKERFILE }}
+          push: true
+          tags: |
+            ${{ steps.image-refs.outputs.image_repo }}:${{ steps.image-refs.outputs.image_tag }}
+            ${{ steps.image-refs.outputs.image_repo }}:latest
+
+      - name: Summary
+        run: |
+          echo "Pushed:"
+          echo "${{ steps.image-refs.outputs.image_repo }}:${{ steps.image-refs.outputs.image_tag }}"
+          echo "${{ steps.image-refs.outputs.image_repo }}:latest"
